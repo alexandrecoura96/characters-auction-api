@@ -9,7 +9,8 @@ server.listen(port, "0.0.0.0", () => {
 });
 
 server.get("/bazar", async (req, res) => {
-  const url = `https://www.tibia.com/charactertrade/?subtopic=currentcharactertrades`;
+  const pageNumber = req.query.pageNumber;
+  const url = `https://www.tibia.com/charactertrade/?subtopic=currentcharactertrades&currentpage=${pageNumber}`;
   const browser = await puppeteer.launch();
   const page = await browser.newPage();
   await page.goto(url);
