@@ -10,7 +10,10 @@ server.listen(port, "0.0.0.0", () => {
 
 server.get("/bazar", async (req, res) => {
   const pageNumber = req.query.pageNumber;
-  const url = `https://www.tibia.com/charactertrade/?subtopic=currentcharactertrades&currentpage=${pageNumber}`;
+  const worldName = req.query.worldName;
+  const vocation = req.query.vocation;
+  const skill = req.query.skill;
+  const url = `https://www.tibia.com/charactertrade/?subtopic=currentcharactertrades&currentpage=${pageNumber}&filter_world=${worldName}&filter_profession=${vocation}&filter_skillid=${skill}`;
   const browser = await puppeteer.launch();
   const page = await browser.newPage();
   await page.goto(url);
@@ -46,6 +49,9 @@ server.get("/bazar", async (req, res) => {
         bid: auctionElement.querySelector("div.ShortAuctionDataValue > b")
           .textContent,
         outfitUrl: auctionElement.querySelector("img.AuctionOutfitImage").src,
+        charactersFeatures: Array.from(
+          auctionElement.querySelectorAll("div.Entry")
+        ).map((entry) => entry.textContent.trim()),
       };
       auctions.push(auction);
     });
@@ -54,6 +60,6 @@ server.get("/bazar", async (req, res) => {
   });
 
   await browser.close();
-
+  console.log(JSON.stringify(pageContent, null, 2));
   res.send(pageContent);
 });
