@@ -52,6 +52,9 @@ server.get("/bazar", async (req, res) => {
         charactersFeatures: Array.from(
           auctionElement.querySelectorAll("div.Entry")
         ).map((entry) => entry.textContent.trim()),
+        inProgress: auctionElement.querySelector(
+          "div.ShortAuctionDataBidRow > div"
+        ).textContent,
       };
       auctions.push(auction);
     });
