@@ -109,6 +109,10 @@ server.get("/history", async (req, res) => {
         charactersFeatures: Array.from(
           auctionElement.querySelectorAll("div.Entry")
         ).map((entry) => entry.textContent.trim()),
+        inProgress: auctionElement.querySelector(
+          "div.ShortAuctionDataBidRow > div"
+        ).textContent,
+        status: auctionElement.querySelector("div.AuctionInfo").textContent,
       };
       auctions.push(auction);
     });
