@@ -102,7 +102,9 @@ server.get("/history", async (req, res) => {
             .textContent,
         auctionStart: auctionElement.querySelector("div.ShortAuctionDataValue")
           .textContent,
-        auctionEnd: auctionElement.querySelector("ShortAuctionDataValue"),
+        auctionEnd: auctionElement
+          .querySelectorAll("div.ShortAuctionDataValue")
+          .item(1).textContent,
         bid: auctionElement.querySelector("div.ShortAuctionDataValue > b")
           .textContent,
         outfitUrl: auctionElement.querySelector("img.AuctionOutfitImage").src,
