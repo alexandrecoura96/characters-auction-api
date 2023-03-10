@@ -14,7 +14,7 @@ server.get("/bazar", async (req, res) => {
   const vocation = req.query.vocation;
   const skill = req.query.skill;
   const url = `https://www.tibia.com/charactertrade/?subtopic=currentcharactertrades&currentpage=${pageNumber}&filter_world=${worldName}&filter_profession=${vocation}&filter_skillid=${skill}`;
-  const browser = await puppeteer.launch();
+  const browser = await puppeteer.launch({ headless: true });
   const page = await browser.newPage();
   await page.goto(url);
 
@@ -63,7 +63,7 @@ server.get("/bazar", async (req, res) => {
   });
 
   await browser.close();
-  console.log(JSON.stringify(pageContent, null, 2));
+  // console.log(JSON.stringify(pageContent, null, 2));
   res.send(pageContent);
 });
 
@@ -73,7 +73,7 @@ server.get("/history", async (req, res) => {
   const vocation = req.query.vocation;
   const skill = req.query.skill;
   const url = `https://www.tibia.com/charactertrade/?subtopic=pastcharactertrades&currentpage=${pageNumber}&filter_world=${worldName}&filter_profession=${vocation}&filter_skillid=${skill}`;
-  const browser = await puppeteer.launch();
+  const browser = await puppeteer.launch({ headless: true });
   const page = await browser.newPage();
   await page.goto(url);
 
@@ -123,6 +123,6 @@ server.get("/history", async (req, res) => {
   });
 
   await browser.close();
-  console.log(JSON.stringify(pageContent, null, 2));
+  // console.log(JSON.stringify(pageContent, null, 2));
   res.send(pageContent);
 });
