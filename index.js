@@ -25,11 +25,22 @@ server.get("/bazar", async (req, res) => {
       return match ? match[1].trim() : null;
     }
 
+    function findAuctionId(value) {
+      var index = value.indexOf("auctionid=");
+      var startIndex = index + "auctionid=".length;
+      var endIndex = value.indexOf("&", startIndex);
+      var auctionId = value.substring(startIndex, endIndex);
+      return auctionId;
+    }
+
     const auctions = [];
 
     const auctionElements = document.querySelectorAll("div.Auction");
     auctionElements.forEach((auctionElement) => {
       const auction = {
+        auctionId: findAuctionId(
+          auctionElement.querySelector("div.AuctionCharacterName > a").href
+        ),
         name: auctionElement.querySelector("div.AuctionCharacterName")
           .textContent,
         level: extractValueFromString(auctionElement.textContent, "Level"),
@@ -60,6 +71,51 @@ server.get("/bazar", async (req, res) => {
     });
 
     return auctions;
+  });
+
+  await browser.close();
+  // console.log(JSON.stringify(pageContent, null, 2));
+  res.send(pageContent);
+});
+
+server.get("/bazar/character-details", async (req, res) => {
+  const auctionId = req.query.auctionId;
+  const url = `https://www.tibia.com/charactertrade/?subtopic=currentcharactertrades&page=details&auctionid=${auctionId}`;
+  const browser = await puppeteer.launch({ headless: true });
+  const page = await browser.newPage();
+  await page.goto(url);
+
+  const pageContent = await page.evaluate(() => {
+    const detailsList = [];
+    const skillsLabelColumns = document.querySelectorAll("td.LabelColumn");
+    const skillsLevelColumns = document.querySelectorAll("td.LevelColumn");
+    const baseInfoLabel = document.querySelectorAll("span.LabelV");
+    const charmsLabel = document.querySelectorAll("tr.Odd > span");
+
+    skillsLabelColumns.forEach((e, i) => {
+      const skills = {
+        label: e.textContent,
+        content: skillsLevelColumns[i].textContent,
+      };
+      detailsList.push(skills);
+    });
+
+    baseInfoLabel.forEach((e, i) => {
+      const base = {
+        label: e.textContent,
+        content: e.nextElementSibling.textContent,
+      };
+      detailsList.push(base);
+    });
+
+    // charmsLabel.forEach((e, i) => {
+    //   const charm = {
+    //     label: e.textContent,
+    //   };
+    //   detailsList.push(charm);
+    // });
+
+    return detailsList;
   });
 
   await browser.close();
