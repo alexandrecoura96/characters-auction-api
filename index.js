@@ -1,5 +1,5 @@
 const express = require("express");
-const { getBazar, getCharacterDetails } = require("./puppeteer");
+const { getBazar, getCharacterDetails, getHistory } = require("./puppeteer");
 
 const server = express();
 const port = 3000;
@@ -31,7 +31,7 @@ server.get("/history", async (req, res) => {
   const vocation = req.query.vocation;
   const skill = req.query.skill;
 
-  const pageContent = await getBazar(pageNumber, worldName, vocation, skill);
+  const pageContent = await getHistory(pageNumber, worldName, vocation, skill);
 
   res.send(pageContent);
 });

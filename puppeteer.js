@@ -1,16 +1,27 @@
 const puppeteer = require("puppeteer");
-const { findAuctionId, extractValueFromString } = require("./utils");
 
 async function getBazar(pageNumber, worldName, vocation, skill) {
   const url = `https://www.tibia.com/charactertrade/?subtopic=currentcharactertrades&currentpage=${pageNumber}&filter_world=${worldName}&filter_profession=${vocation}&filter_skillid=${skill}`;
   const browser = await puppeteer.launch({ headless: true });
   const page = await browser.newPage();
   await page.goto(url);
-  await page.exposeFunction("extractValueFromString", extractValueFromString);
-  await page.exposeFunction("findAuctionId", findAuctionId);
 
   const pageContent = await page.evaluate(() => {
     const auctions = [];
+
+    function extractValueFromString(string, keyword) {
+      const regex = new RegExp(`${keyword}\\s*:\\s*([\\w\\s]+)`);
+      const match = string.match(regex);
+      return match ? match[1].trim() : null;
+    }
+
+    function findAuctionId(value) {
+      var index = value.indexOf("auctionid=");
+      var startIndex = index + "auctionid=".length;
+      var endIndex = value.indexOf("&", startIndex);
+      var auctionId = value.substring(startIndex, endIndex);
+      return auctionId;
+    }
 
     const auctionElements = document.querySelectorAll("div.Auction");
     auctionElements.forEach((auctionElement) => {
@@ -59,10 +70,22 @@ async function getHistory(pageNumber, worldName, vocation, skill) {
   const browser = await puppeteer.launch({ headless: true });
   const page = await browser.newPage();
   await page.goto(url);
-  await page.exposeFunction("extractValueFromString", extractValueFromString);
-  await page.exposeFunction("findAuctionId", findAuctionId);
   const pageContent = await page.evaluate(() => {
     const auctions = [];
+
+    function extractValueFromString(string, keyword) {
+      const regex = new RegExp(`${keyword}\\s*:\\s*([\\w\\s]+)`);
+      const match = string.match(regex);
+      return match ? match[1].trim() : null;
+    }
+
+    function findAuctionId(value) {
+      var index = value.indexOf("auctionid=");
+      var startIndex = index + "auctionid=".length;
+      var endIndex = value.indexOf("&", startIndex);
+      var auctionId = value.substring(startIndex, endIndex);
+      return auctionId;
+    }
 
     const auctionElements = document.querySelectorAll("div.Auction");
     auctionElements.forEach((auctionElement) => {
