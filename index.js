@@ -140,11 +140,22 @@ server.get("/history", async (req, res) => {
       return match ? match[1].trim() : null;
     }
 
+    function findAuctionId(value) {
+      var index = value.indexOf("auctionid=");
+      var startIndex = index + "auctionid=".length;
+      var endIndex = value.indexOf("&", startIndex);
+      var auctionId = value.substring(startIndex, endIndex);
+      return auctionId;
+    }
+
     const auctions = [];
 
     const auctionElements = document.querySelectorAll("div.Auction");
     auctionElements.forEach((auctionElement) => {
       const auction = {
+        auctionId: findAuctionId(
+          auctionElement.querySelector("div.AuctionCharacterName > a").href
+        ),
         name: auctionElement.querySelector("div.AuctionCharacterName")
           .textContent,
         level: extractValueFromString(auctionElement.textContent, "Level"),
