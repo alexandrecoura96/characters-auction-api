@@ -1,9 +1,18 @@
 const puppeteer = require("puppeteer");
 
+let browser;
+let page;
+
+async function initBrowser() {
+  if (!browser) {
+    browser = await puppeteer.launch({ headless: true });
+    page = await browser.newPage();
+  }
+}
+
 async function getBazar(pageNumber, worldName, vocation, skill) {
   const url = `https://www.tibia.com/charactertrade/?subtopic=currentcharactertrades&currentpage=${pageNumber}&filter_world=${worldName}&filter_profession=${vocation}&filter_skillid=${skill}`;
-  const browser = await puppeteer.launch({ headless: true });
-  const page = await browser.newPage();
+  await initBrowser();
   await page.goto(url);
 
   const pageContent = await page.evaluate(() => {
@@ -61,15 +70,14 @@ async function getBazar(pageNumber, worldName, vocation, skill) {
     return auctions;
   });
 
-  await browser.close();
   return pageContent;
 }
 
 async function getHistory(pageNumber, worldName, vocation, skill) {
   const url = `https://www.tibia.com/charactertrade/?subtopic=pastcharactertrades&currentpage=${pageNumber}&filter_world=${worldName}&filter_profession=${vocation}&filter_skillid=${skill}`;
-  const browser = await puppeteer.launch({ headless: true });
-  const page = await browser.newPage();
+  await initBrowser();
   await page.goto(url);
+
   const pageContent = await page.evaluate(() => {
     const auctions = [];
 
@@ -126,15 +134,14 @@ async function getHistory(pageNumber, worldName, vocation, skill) {
     return auctions;
   });
 
-  await browser.close();
   return pageContent;
 }
 
 async function getCharacterDetails(auctionId) {
   const url = `https://www.tibia.com/charactertrade/?subtopic=currentcharactertrades&page=details&auctionid=${auctionId}`;
-  const browser = await puppeteer.launch({ headless: true });
-  const page = await browser.newPage();
+  await initBrowser();
   await page.goto(url);
+
   const pageContent = await page.evaluate(() => {
     const detailsList = [];
     const skillsLabelColumns = document.querySelectorAll("td.LabelColumn");
@@ -160,7 +167,6 @@ async function getCharacterDetails(auctionId) {
     return detailsList;
   });
 
-  await browser.close();
   return pageContent;
 }
 
