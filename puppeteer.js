@@ -10,8 +10,14 @@ async function initBrowser() {
   }
 }
 
-async function getBazar(pageNumber, worldName, vocation, skill) {
-  const url = `https://www.tibia.com/charactertrade/?subtopic=currentcharactertrades&currentpage=${pageNumber}&filter_world=${worldName}&filter_profession=${vocation}&filter_skillid=${skill}`;
+async function getBazar(
+  pageNumber,
+  worldName,
+  vocation,
+  order_column,
+  order_direction
+) {
+  const url = `https://www.tibia.com/charactertrade/?subtopic=currentcharactertrades&currentpage=${pageNumber}&filter_world=${worldName}&filter_profession=${vocation}&order_column=${order_column}&order_direction=${order_direction}`;
   await initBrowser();
   await page.goto(url);
 
@@ -73,8 +79,14 @@ async function getBazar(pageNumber, worldName, vocation, skill) {
   return pageContent;
 }
 
-async function getHistory(pageNumber, worldName, vocation, skill) {
-  const url = `https://www.tibia.com/charactertrade/?subtopic=pastcharactertrades&currentpage=${pageNumber}&filter_world=${worldName}&filter_profession=${vocation}&filter_skillid=${skill}`;
+async function getHistory(
+  pageNumber,
+  worldName,
+  vocation,
+  order_column,
+  order_direction
+) {
+  const url = `https://www.tibia.com/charactertrade/?subtopic=pastcharactertrades&currentpage=${pageNumber}&filter_world=${worldName}&filter_profession=${vocation}&order_column=${order_column}&order_direction=${order_direction}`;
   await initBrowser();
   await page.goto(url);
 

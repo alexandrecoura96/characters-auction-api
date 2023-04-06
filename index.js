@@ -12,9 +12,16 @@ server.get("/bazar", async (req, res) => {
   const pageNumber = req.query.pageNumber;
   const worldName = req.query.worldName;
   const vocation = req.query.vocation;
-  const skill = req.query.skill;
+  const order_column = req.query.order_column;
+  const order_direction = req.query.order_direction;
 
-  const pageContent = await getBazar(pageNumber, worldName, vocation, skill);
+  const pageContent = await getBazar(
+    pageNumber,
+    worldName,
+    vocation,
+    order_column,
+    order_direction
+  );
   res.send(pageContent);
 });
 
@@ -29,9 +36,16 @@ server.get("/history", async (req, res) => {
   const pageNumber = req.query.pageNumber;
   const worldName = req.query.worldName;
   const vocation = req.query.vocation;
-  const skill = req.query.skill;
+  const order_column = req.query.order_column;
+  const order_direction = req.query.order_direction;
 
-  const pageContent = await getHistory(pageNumber, worldName, vocation, skill);
+  const pageContent = await getHistory(
+    pageNumber,
+    worldName,
+    vocation,
+    order_column,
+    order_direction
+  );
 
   res.send(pageContent);
 });
